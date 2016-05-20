@@ -8,11 +8,12 @@ Here is a screenshot showing the parent metadata below the default object "Detai
 
 ![With pparent metadata expanded](https://dl.dropboxusercontent.com/u/1015702/linked_to/islandora_compound_parent_metadata/compound_parent_metadata.png)
 
+The label used for the parent's metadata is configurable, as described below.
+
 ## Requirements
 
 * [Compound Object Solution Pack](https://github.com/Islandora/islandora_solution_pack_compound)
 
-The label used for the parent's metadata is configurable, as described below.
 
 Install as usual, see [this](https://drupal.org/documentation/install/modules-themes/modules-7) for further information.
 
