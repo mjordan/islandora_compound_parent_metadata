@@ -42,16 +42,21 @@ function islandora_compound_parent_metadata_admin_settings() {
 function islandora_compound_parent_metadata_islandora_view_object_alter(&$object, &$rendered) {
   $parent_info = islandora_compound_object_retrieve_compound_info($object);
   if (isset($parent_info['parent_pid'])) {
-    module_load_include('inc', 'islandora_solr_metadata', 'includes/db');
-    $parent_object = islandora_object_load($parent_info['parent_pid']);
-    $elements = array(
-      'islandora_object' => $parent_object,
-      'print' => FALSE,
-      'associations' => islandora_solr_metadata_get_associations_by_cmodels($parent_object->models),
-    );
-    drupal_alter('islandora_solr_metadata_display_elements', $elements);
-    if (count($elements['associations']) > 0) {
-      $markup = theme('islandora_solr_metadata_display', $elements);
+    if (module_exists('islandora_solr_metadata')) {
+      module_load_include('inc', 'islandora_solr_metadata', 'includes/db');
+      $parent_object = islandora_object_load($parent_info['parent_pid']);
+      $elements = array(
+        'islandora_object' => $parent_object,
+        'print' => FALSE,
+        'associations' => islandora_solr_metadata_get_associations_by_cmodels($parent_object->models),
+      );
+      drupal_alter('islandora_solr_metadata_display_elements', $elements);
+      if (count($elements['associations']) > 0) {
+        $markup = theme('islandora_solr_metadata_display', $elements);
+      }
+      else {
+        $markup = theme('islandora_dublin_core_display', array('islandora_object' => $parent_object));
+      }
     }
     else {
       $markup = theme('islandora_dublin_core_display', array('islandora_object' => $parent_object));
