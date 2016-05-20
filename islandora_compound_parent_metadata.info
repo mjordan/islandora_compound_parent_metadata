@@ -1,0 +1,5 @@
+name = "Islandora Compound Parent Metadata"
+description = "Adds the parent's metadata below an object if that object is a child of compound object."
+version = 7.x-dev
+core = 7.x
+dependencies[] = islandora_compound_object

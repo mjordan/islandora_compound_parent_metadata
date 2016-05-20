@@ -1,0 +1,68 @@
+<?php
+
+/**
+ * @file
+ * The main Islandora Compound Parent Metadata module file.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function islandora_compound_parent_metadata_menu() {
+  $items = array();
+  $items['admin/islandora/tools/parent_metadata'] = array(
+    'title' => 'Islandora Display Parent Metadata',
+    'description' => 'Configure Islandora Display Parent Metadata.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('islandora_compound_parent_metadata_admin_settings'),
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  return $items;
+}
+
+/**
+ * Admin settings form builder.
+ */
+function islandora_compound_parent_metadata_admin_settings() {
+  $form['islandora_compound_parent_metadata_label'] = array(
+    '#title' => t('Parent metadata label'),
+    '#type' => 'textfield',
+    '#size' => 60,
+    '#default_value' => variable_get('islandora_compound_parent_metadata_label', 'Part of'),
+    '#description' => t("The label to use for the parent metadata."),
+    '#maxlength' => 255,
+  );
+  return system_settings_form($form);
+}
+
+/**
+ * Implements hook_islandora_view_object_alter().
+ */
+function islandora_compound_parent_metadata_islandora_view_object_alter(&$object, &$rendered) {
+  $parent_info = islandora_compound_object_retrieve_compound_info($object);
+  if (isset($parent_info['parent_pid'])) {
+    module_load_include('inc', 'islandora_solr_metadata', 'includes/db');
+    $parent_object = islandora_object_load($parent_info['parent_pid']);
+    $elements = array(
+      'islandora_object' => $parent_object,
+      'print' => FALSE,
+      'associations' => islandora_solr_metadata_get_associations_by_cmodels($parent_object->models),
+    );
+    drupal_alter('islandora_solr_metadata_display_elements', $elements);
+    if (count($elements['associations']) > 0) {
+      $markup = theme('islandora_solr_metadata_display', $elements);
+    }
+    else {
+      $markup = theme('islandora_dublin_core_display', array('islandora_object' => $parent_object));
+    }
+
+    $label = variable_get('islandora_compound_parent_metadata_label', 'Part of');
+    // The label 'Details' is not themable so we search 'n replace in the
+    // themed HTML.
+    $markup = preg_replace('|Details|', $label, $markup);
+    if (isset($rendered[NULL])) {
+      $rendered[NULL]['#markup'] = $rendered[NULL]['#markup'] . $markup;
+    }
+  }
+}
