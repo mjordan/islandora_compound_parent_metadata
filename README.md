@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Simple utility module that adds the parent's metadata below an object if that object is a child of compound object. Works with default Dublin Core metadata displays as well as metadata displays managed by Islandora Solr Metadata. In the latter case, this module uses the metadata display configuration associated with the parent object.
+Simple utility module that appends the parent's metadata to an object's display if that object is a child of compound object. Works with default Dublin Core metadata displays as well as metadata displays managed by Islandora Solr Metadata. In the latter case, this module uses the metadata display configuration associated with the parent object.
 
 Here is a screenshot showing the parent metadata below the default object "Details":
 
@@ -11,6 +11,8 @@ Here is a screenshot showing the parent metadata below the default object "Detai
 ## Requirements
 
 * [Compound Object Solution Pack](https://github.com/Islandora/islandora_solution_pack_compound)
+
+The label used for the parent's metadata is configurable, as described below.
 
 Install as usual, see [this](https://drupal.org/documentation/install/modules-themes/modules-7) for further information.
 
