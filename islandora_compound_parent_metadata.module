@@ -42,9 +42,9 @@ function islandora_compound_parent_metadata_admin_settings() {
 function islandora_compound_parent_metadata_islandora_view_object_alter(&$object, &$rendered) {
   $parent_info = islandora_compound_object_retrieve_compound_info($object);
   if (isset($parent_info['parent_pid'])) {
+    $parent_object = islandora_object_load($parent_info['parent_pid']);
     if (module_exists('islandora_solr_metadata')) {
       module_load_include('inc', 'islandora_solr_metadata', 'includes/db');
-      $parent_object = islandora_object_load($parent_info['parent_pid']);
       $elements = array(
         'islandora_object' => $parent_object,
         'print' => FALSE,
