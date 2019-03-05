@@ -40,6 +40,8 @@ function islandora_compound_parent_metadata_admin_settings() {
  * Implements hook_islandora_view_object_alter().
  */
 function islandora_compound_parent_metadata_islandora_view_object_alter(&$object, &$rendered) {
+  drupal_add_js('misc/form.js');
+  drupal_add_js('misc/collapse.js');
   $parent_info = islandora_compound_object_retrieve_compound_info($object);
   if (isset($parent_info['parent_pid'])) {
     $parent_object = islandora_object_load($parent_info['parent_pid']);
@@ -66,8 +68,12 @@ function islandora_compound_parent_metadata_islandora_view_object_alter(&$object
     // The label 'Details' is not themable so we search 'n replace in the
     // themed HTML.
     $markup = preg_replace('|Details|', $label, $markup);
-    if (isset($rendered[NULL])) {
+    if (isset($rendered[NULL]['#markup'])) {
       $rendered[NULL]['#markup'] = $rendered[NULL]['#markup'] . $markup;
+    }
+    else {
+      // $rendered[NULL]['#markup'] = $markup;
+      $rendered[NULL][] = $markup;
     }
   }
 }
